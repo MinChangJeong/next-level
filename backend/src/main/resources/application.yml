@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: dev
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    com.nextlevel: DEBUG
+    org.hibernate.SQL: DEBUG
