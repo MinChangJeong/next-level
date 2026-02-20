@@ -16,7 +16,7 @@ public class ApiResponse<T> {
     private final boolean success;
     private final String message;
     private final T data;
-    private final String errorCode;
+    private final String errorCode; 
 
     /**
      * 성공 응답을 생성한다.

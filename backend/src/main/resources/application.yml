@@ -8,6 +8,10 @@ spring:
       hibernate:
         format_sql: true
 
+jwt:
+  secret: nextlevel-onlyone-fair-hagojabbi-secret-key-2024-minimum-256bits
+  expiration: 86400000  # 24시간
+
 logging:
   level:
     com.nextlevel: DEBUG

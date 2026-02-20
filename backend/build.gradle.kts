@@ -33,6 +33,17 @@ dependencies {
     // Bean Validation (@Valid, @NotBlank 등)
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
+    // Spring Security
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
+    // WebSocket (실시간 QR 상태 전환)
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+
+    // JWT
+    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
+
     // MySQL 커넥터 (운영 환경)
     runtimeOnly("com.mysql:mysql-connector-j")
 
@@ -45,6 +56,7 @@ dependencies {
 
     // 테스트
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

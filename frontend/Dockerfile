@@ -5,7 +5,7 @@ WORKDIR /app
 
 # 의존성 파일 먼저 복사 (레이어 캐싱)
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 # 소스 복사 및 빌드
 COPY . .

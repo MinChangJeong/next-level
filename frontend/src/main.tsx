@@ -4,12 +4,18 @@ import { ThemeProvider } from 'styled-components'
 import App from './App.tsx'
 import GlobalStyle from './styles/GlobalStyle.ts'
 import theme from './styles/theme.ts'
+import { AuthProvider } from './contexts/AuthContext.tsx'
+import { ToastProvider } from './components/common/Toast.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <App />
+      <AuthProvider>
+        <ToastProvider>
+          <App />
+        </ToastProvider>
+      </AuthProvider>
     </ThemeProvider>
   </StrictMode>,
 )
