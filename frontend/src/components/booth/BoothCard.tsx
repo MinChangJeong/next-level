@@ -6,27 +6,43 @@ interface BoothCardProps {
   booth: Booth
 }
 
+const accentColors = [
+  'linear-gradient(135deg, #FF6B6B, #EE5A24)',
+  'linear-gradient(135deg, #4ECDC4, #2ECC71)',
+  'linear-gradient(135deg, #6C5CE7, #A29BFE)',
+  'linear-gradient(135deg, #FDCB6E, #F39C12)',
+  'linear-gradient(135deg, #74B9FF, #0984E3)',
+  'linear-gradient(135deg, #FD79A8, #E84393)',
+  'linear-gradient(135deg, #55EFC4, #00B894)',
+  'linear-gradient(135deg, #FAB1A0, #E17055)',
+]
+
+function getAccentColor(boothId: string): string {
+  let hash = 0
+  for (let i = 0; i < boothId.length; i++) {
+    hash = boothId.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return accentColors[Math.abs(hash) % accentColors.length]
+}
+
 export default function BoothCard({ booth }: BoothCardProps) {
   const navigate = useNavigate()
 
   return (
     <Card onClick={() => navigate(`/booth/${booth.boothId}`)} $visited={booth.visited}>
-      <ImageBox>
-        {booth.imageUrl ? (
-          <img src={booth.imageUrl} alt={booth.name} />
-        ) : (
-          <PlaceholderIcon>🎪</PlaceholderIcon>
-        )}
-        {booth.visited && <VisitedBadge>✓ 방문완료</VisitedBadge>}
-      </ImageBox>
-      <Info>
-        <Name $visited={booth.visited}>{booth.name}</Name>
+      <AccentBar style={{ background: getAccentColor(booth.boothId) }} />
+      <CardContent>
+        <TopRow>
+          <Name $visited={booth.visited}>{booth.name}</Name>
+          {booth.visited && <VisitedBadge>방문완료</VisitedBadge>}
+        </TopRow>
         <Desc>{booth.shortDescription}</Desc>
-        <Footer>
-          <VisitorCount>👥 {booth.visitorCount}명</VisitorCount>
-          <ZoneBadge>{booth.zone}</ZoneBadge>
-        </Footer>
-      </Info>
+        <BottomRow>
+          <MetaItem>📍 {booth.zone}</MetaItem>
+          <MetaItem>👥 {booth.visitorCount}명</MetaItem>
+          <FloorBadge>{booth.floor}</FloorBadge>
+        </BottomRow>
+      </CardContent>
     </Card>
   )
 }
@@ -35,85 +51,84 @@ const Card = styled.div<{ $visited: boolean }>`
   background: #fff;
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid #F2F4F6;
+  display: flex;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  opacity: ${({ $visited }) => ($visited ? 0.7 : 1)};
+  transition: all 0.15s ease;
+  opacity: ${({ $visited }) => ($visited ? 0.75 : 1)};
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 
   &:active {
     transform: scale(0.98);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 `
 
-const ImageBox = styled.div`
-  position: relative;
-  height: 120px;
-  background: #F5F6F8;
+const AccentBar = styled.div`
+  width: 5px;
+  flex-shrink: 0;
+  border-radius: 14px 0 0 14px;
+`
+
+const CardContent = styled.div`
+  flex: 1;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+`
+
+const TopRow = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`
-
-const PlaceholderIcon = styled.span`
-  font-size: 40px;
-`
-
-const VisitedBadge = styled.span`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: #00C471;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 20px;
-`
-
-const Info = styled.div`
-  padding: 12px 14px;
+  justify-content: space-between;
+  gap: 8px;
 `
 
 const Name = styled.h3<{ $visited: boolean }>`
   font-size: 15px;
   font-weight: 700;
   color: ${({ $visited, theme }) => ($visited ? theme.colors.text.secondary : theme.colors.text.primary)};
-  margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex: 1;
+`
+
+const VisitedBadge = styled.span`
+  flex-shrink: 0;
+  background: #DCFCE7;
+  color: #16A34A;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
 `
 
 const Desc = styled.p`
   font-size: 13px;
   color: ${({ theme }) => theme.colors.text.secondary};
-  margin-bottom: 8px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  line-height: 1.4;
 `
 
-const Footer = styled.div`
+const BottomRow = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
 `
 
-const VisitorCount = styled.span`
+const MetaItem = styled.span`
   font-size: 12px;
-  color: ${({ theme }) => theme.colors.text.secondary};
+  color: ${({ theme }) => theme.colors.text.disabled};
 `
 
-const ZoneBadge = styled.span`
+const FloorBadge = styled.span`
+  margin-left: auto;
   font-size: 11px;
   font-weight: 600;
   background: ${({ theme }) => theme.colors.surface};

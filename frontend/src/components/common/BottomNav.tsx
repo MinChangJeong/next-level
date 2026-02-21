@@ -5,7 +5,7 @@ const tabs = [
   { path: '/main', label: '홈', icon: '🏠' },
   { path: '/booths', label: '부스', icon: '🎪' },
   { path: '/missions', label: '미션', icon: '🥚' },
-  { path: '/gacha', label: '가챠', icon: '🎁' },
+  { path: '/shop', label: '상점', icon: '🛒' },
   { path: '/qr', label: 'QR', icon: '📱' },
 ]
 

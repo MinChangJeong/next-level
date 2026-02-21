@@ -38,15 +38,33 @@ export default function ZoneListPage() {
         {loading ? (
           <LoadingText>불러오는 중...</LoadingText>
         ) : booths.length === 0 ? (
-          <EmptyText>이 존에는 부스가 없습니다.</EmptyText>
+          <EmptyState>
+            <EmptyIcon>🔍</EmptyIcon>
+            <EmptyText>이 존에는 부스가 없습니다.</EmptyText>
+          </EmptyState>
         ) : (
           <>
-            <CountText>{booths.length}개 부스</CountText>
-            <Grid>
+            <StatusRow>
+              <StatusItem>
+                <StatusCount>{booths.length}</StatusCount>
+                <StatusLabel>전체</StatusLabel>
+              </StatusItem>
+              <StatusDivider />
+              <StatusItem>
+                <StatusCount $color="#16A34A">{booths.filter(b => b.visited).length}</StatusCount>
+                <StatusLabel>방문완료</StatusLabel>
+              </StatusItem>
+              <StatusDivider />
+              <StatusItem>
+                <StatusCount $color="#EF4444">{booths.filter(b => !b.visited).length}</StatusCount>
+                <StatusLabel>미방문</StatusLabel>
+              </StatusItem>
+            </StatusRow>
+            <BoothList>
               {booths.map(booth => (
                 <BoothCard key={booth.boothId} booth={booth} />
               ))}
-            </Grid>
+            </BoothList>
           </>
         )}
       </Content>
@@ -57,19 +75,49 @@ export default function ZoneListPage() {
 }
 
 const Content = styled.div`
-  padding: 16px 16px 0;
+  padding: 16px;
 `
 
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+const StatusRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 `
 
-const CountText = styled.p`
-  font-size: 14px;
+const StatusItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+`
+
+const StatusCount = styled.span<{ $color?: string }>`
+  font-size: 20px;
+  font-weight: 700;
+  color: ${({ $color, theme }) => $color ?? theme.colors.text.primary};
+`
+
+const StatusLabel = styled.span`
+  font-size: 11px;
   color: ${({ theme }) => theme.colors.text.secondary};
-  margin-bottom: 12px;
+`
+
+const StatusDivider = styled.div`
+  width: 1px;
+  height: 28px;
+  background: #E2E8F0;
+`
+
+const BoothList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `
 
 const LoadingText = styled.p`
@@ -78,8 +126,20 @@ const LoadingText = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
 `
 
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 60px 0;
+`
+
+const EmptyIcon = styled.span`
+  font-size: 40px;
+`
+
 const EmptyText = styled.p`
   text-align: center;
-  padding: 60px 0;
   color: ${({ theme }) => theme.colors.text.secondary};
+  font-size: 14px;
 `

@@ -40,15 +40,27 @@ export default function BoothsPage() {
           <LoadingText>불러오는 중...</LoadingText>
         ) : (
           <>
-            <CountText>
-              {filtered.filter(b => !b.visited).length}개 미방문 ·{' '}
-              {filtered.filter(b => b.visited).length}개 방문완료
-            </CountText>
-            <Grid>
+            <StatusRow>
+              <StatusItem>
+                <StatusCount>{filtered.length}</StatusCount>
+                <StatusLabel>전체</StatusLabel>
+              </StatusItem>
+              <StatusDivider />
+              <StatusItem>
+                <StatusCount $color="#16A34A">{filtered.filter(b => b.visited).length}</StatusCount>
+                <StatusLabel>방문완료</StatusLabel>
+              </StatusItem>
+              <StatusDivider />
+              <StatusItem>
+                <StatusCount $color="#EF4444">{filtered.filter(b => !b.visited).length}</StatusCount>
+                <StatusLabel>미방문</StatusLabel>
+              </StatusItem>
+            </StatusRow>
+            <BoothList>
               {filtered.map(booth => (
                 <BoothCard key={booth.boothId} booth={booth} />
               ))}
-            </Grid>
+            </BoothList>
           </>
         )}
       </Content>
@@ -96,16 +108,46 @@ const Content = styled.div`
   padding: 16px;
 `
 
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+const StatusRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 `
 
-const CountText = styled.p`
-  font-size: 13px;
+const StatusItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+`
+
+const StatusCount = styled.span<{ $color?: string }>`
+  font-size: 20px;
+  font-weight: 700;
+  color: ${({ $color, theme }) => $color ?? theme.colors.text.primary};
+`
+
+const StatusLabel = styled.span`
+  font-size: 11px;
   color: ${({ theme }) => theme.colors.text.secondary};
-  margin-bottom: 12px;
+`
+
+const StatusDivider = styled.div`
+  width: 1px;
+  height: 28px;
+  background: #E2E8F0;
+`
+
+const BoothList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `
 
 const LoadingText = styled.p`

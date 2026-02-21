@@ -11,9 +11,8 @@ import BoothDetailPage from './pages/BoothDetailPage'
 import QRPage from './pages/QRPage'
 import EvaluatePage from './pages/EvaluatePage'
 import MissionsPage from './pages/MissionsPage'
-import GachaPage from './pages/GachaPage'
+import ShopPage from './pages/ShopPage'
 import GrowthZonePage from './pages/GrowthZonePage'
-import PhotoBoothPage from './pages/PhotoBoothPage'
 import AdminPage from './pages/AdminPage'
 
 function PrivateRoute({ children }: { children: ReactNode }) {
@@ -41,9 +40,8 @@ export default function App() {
         <Route path="/qr" element={<PrivateRoute><QRPage /></PrivateRoute>} />
         <Route path="/evaluate/:boothId" element={<PrivateRoute><EvaluatePage /></PrivateRoute>} />
         <Route path="/missions" element={<PrivateRoute><MissionsPage /></PrivateRoute>} />
-        <Route path="/gacha" element={<PrivateRoute><GachaPage /></PrivateRoute>} />
+        <Route path="/shop" element={<PrivateRoute><ShopPage /></PrivateRoute>} />
         <Route path="/growth-zone" element={<PrivateRoute><GrowthZonePage /></PrivateRoute>} />
-        <Route path="/photobooth" element={<PrivateRoute><PhotoBoothPage /></PrivateRoute>} />
         <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

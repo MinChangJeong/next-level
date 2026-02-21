@@ -61,36 +61,37 @@ export default function BoothDetailPage() {
         <PageTitle>부스 상세</PageTitle>
       </PageHeader>
 
-      {/* 부스 이미지 */}
-      <ImageArea>
-        {booth.imageUrl
-          ? <img src={booth.imageUrl} alt={booth.name} />
-          : <ImagePlaceholder>🎪</ImagePlaceholder>
-        }
-      </ImageArea>
-
       <Content>
-        {/* 기본 정보 */}
+        {/* 기본 정보 카드 */}
         <InfoCard>
-          <BoothName>{booth.name}</BoothName>
-          <ShortDesc>{booth.shortDescription}</ShortDesc>
-          <MetaRow>
-            <MetaBadge>📍 {booth.zone} · {booth.floor}</MetaBadge>
-            <MetaBadge>👥 {booth.visitorCount}명 방문</MetaBadge>
-          </MetaRow>
+          <CardAccent />
+          <CardBody>
+            <BoothName>{booth.name}</BoothName>
+            <ShortDesc>{booth.shortDescription}</ShortDesc>
+            <MetaRow>
+              <MetaBadge>📍 {booth.zone} · {booth.floor}</MetaBadge>
+              <MetaBadge>👥 {booth.visitorCount}명 방문</MetaBadge>
+            </MetaRow>
+          </CardBody>
         </InfoCard>
 
-        {/* 상세 설명 */}
-        <DescCard>
-          <SectionLabel>아이디어 상세</SectionLabel>
-          <DescText>{booth.longDescription}</DescText>
-        </DescCard>
+        {/* 상세 설명 카드 */}
+        <DetailCard>
+          <CardAccent $color="linear-gradient(135deg, #4ECDC4, #2ECC71)" />
+          <CardBody>
+            <SectionLabel>아이디어 상세</SectionLabel>
+            <DescText>{booth.longDescription}</DescText>
+          </CardBody>
+        </DetailCard>
 
         {/* ONLYONE 가치 */}
         {booth.onlyoneValue && (
           <ValueCard>
-            <ValueLabel>⭐ ONLYONE적 가치</ValueLabel>
-            <ValueText>{booth.onlyoneValue}</ValueText>
+            <CardAccent $color="linear-gradient(135deg, #FDCB6E, #F39C12)" />
+            <CardBody>
+              <ValueLabel>ONLYONE적 가치</ValueLabel>
+              <ValueText>{booth.onlyoneValue}</ValueText>
+            </CardBody>
           </ValueCard>
         )}
 
@@ -102,25 +103,30 @@ export default function BoothDetailPage() {
         )}
 
         {/* 제안 섹션 */}
-        <CommentSection>
-          <CommentHeader>
+        <SuggestionCard>
+          <SuggestionHeader>
             <SectionLabel>아이디어 제안 ({comments.length})</SectionLabel>
             <AddButton onClick={() => setShowCommentSheet(true)}>+ 제안하기</AddButton>
-          </CommentHeader>
-          <ProposalHint>💌 해당 제안은 부스에 전달됩니다</ProposalHint>
+          </SuggestionHeader>
+          <ProposalHint>해당 제안은 부스에 전달됩니다</ProposalHint>
 
           {comments.length === 0 ? (
             <EmptyComment>첫 번째 제안을 남겨보세요!</EmptyComment>
           ) : (
-            comments.map(c => (
-              <CommentCard key={c.commentId}>
-                <CommentAuthor>{c.authorName}</CommentAuthor>
-                <CommentText>💡 {c.suggestion}</CommentText>
-                <CommentEffect>✨ {c.expectedEffect}</CommentEffect>
-              </CommentCard>
-            ))
+            <CommentList>
+              {comments.map(c => (
+                <CommentCard key={c.commentId}>
+                  <CommentAccent />
+                  <CommentBody>
+                    <CommentAuthor>{c.authorName}</CommentAuthor>
+                    <CommentText>{c.suggestion}</CommentText>
+                    <CommentEffect>기대효과: {c.expectedEffect}</CommentEffect>
+                  </CommentBody>
+                </CommentCard>
+              ))}
+            </CommentList>
           )}
-        </CommentSection>
+        </SuggestionCard>
       </Content>
 
       <BottomSheet
@@ -142,7 +148,7 @@ export default function BoothDetailPage() {
             value={expectedEffect}
             onChange={e => setExpectedEffect(e.target.value.slice(0, 50))}
           />
-          <HintText>💌 해당 제안은 부스에 전달됩니다</HintText>
+          <HintText>해당 제안은 부스에 전달됩니다</HintText>
           <Button fullWidth loading={submitting} onClick={handleSubmitComment}>
             제안 등록하기
           </Button>
@@ -167,21 +173,6 @@ const LoadingPage = styled.div`
   color: #8B95A1;
 `
 
-const ImageArea = styled.div`
-  height: 220px;
-  background: #E8EAED;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  img { width: 100%; height: 100%; object-fit: cover; }
-`
-
-const ImagePlaceholder = styled.span`
-  font-size: 60px;
-`
-
 const Content = styled.div`
   padding: 16px;
   display: flex;
@@ -192,21 +183,35 @@ const Content = styled.div`
 
 const InfoCard = styled.div`
   background: #fff;
-  border-radius: 16px;
-  padding: 20px;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+`
+
+const CardAccent = styled.div<{ $color?: string }>`
+  width: 5px;
+  flex-shrink: 0;
+  background: ${({ $color }) => $color ?? 'linear-gradient(135deg, #6C5CE7, #A29BFE)'};
+`
+
+const CardBody = styled.div`
+  flex: 1;
+  padding: 18px 16px;
 `
 
 const BoothName = styled.h1`
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 `
 
 const ShortDesc = styled.p`
-  font-size: 15px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.text.secondary};
   margin-bottom: 12px;
+  line-height: 1.5;
 `
 
 const MetaRow = styled.div`
@@ -223,10 +228,12 @@ const MetaBadge = styled.span`
   border-radius: 20px;
 `
 
-const DescCard = styled.div`
+const DetailCard = styled.div`
   background: #fff;
-  border-radius: 16px;
-  padding: 20px;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 `
 
 const SectionLabel = styled.p`
@@ -246,8 +253,9 @@ const DescText = styled.p`
 
 const ValueCard = styled.div`
   background: #FFFBEB;
-  border-radius: 16px;
-  padding: 16px 20px;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
   border: 1px solid #FDE68A;
 `
 
@@ -264,13 +272,14 @@ const ValueText = styled.p`
   line-height: 1.5;
 `
 
-const CommentSection = styled.div`
+const SuggestionCard = styled.div`
   background: #fff;
-  border-radius: 16px;
-  padding: 20px;
+  border-radius: 14px;
+  padding: 18px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 `
 
-const CommentHeader = styled.div`
+const SuggestionHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -299,11 +308,28 @@ const EmptyComment = styled.p`
   font-size: 14px;
 `
 
+const CommentList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+
 const CommentCard = styled.div`
   background: ${({ theme }) => theme.colors.surface};
   border-radius: 10px;
-  padding: 12px;
-  margin-bottom: 8px;
+  overflow: hidden;
+  display: flex;
+`
+
+const CommentAccent = styled.div`
+  width: 3px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #74B9FF, #0984E3);
+`
+
+const CommentBody = styled.div`
+  flex: 1;
+  padding: 10px 12px;
 `
 
 const CommentAuthor = styled.p`
@@ -317,6 +343,7 @@ const CommentText = styled.p`
   font-size: 14px;
   color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: 4px;
+  line-height: 1.4;
 `
 
 const CommentEffect = styled.p`
